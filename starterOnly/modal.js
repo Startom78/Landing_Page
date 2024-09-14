@@ -13,6 +13,7 @@ const closeBtn = modalBg.querySelector(".close");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalWindow =  modalBg.querySelector(".content");
+const form = modalWindow.querySelector("form");
 
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
@@ -34,12 +35,20 @@ function stopPropagation(event) {
 }
 
 function validateFormular() {
-  const first_name = document.getElementById(".first")
-  const last_name = document.getElementById(".last")
-  const email = document.getElementById(".email")
-  const birthdate = document.getElementById(".birthdate")
-  const number_tournament = document.getElementById(".quantity")
+  const first_name = document.getElementById("first")
+  const last_name = document.getElementById("last")
+  const email = document.getElementById("email")
+  const birthdate = document.getElementById("birthdate")
+  const number_tournament = document.getElementById("quantity")
+
+  first_name.addEventListener("blur", (event) => {
+    const errElement = first_name.closest(".formData")
+    errElement.setAttribute("data-error", "Le prénom n'est pas valide")
+    errElement.setAttribute("data-error-visible", true)
+    console.log(errElement)
+  })
 }
+validateFormular()
 
 
 //TODO tests manuels
@@ -52,3 +61,8 @@ function validateFormular() {
 
 
 
+form.addEventListener("submit", (event)=> {
+  event.preventDefault();
+  const body = modalWindow.querySelector(".modal-body")
+  body.innerHTML = "<div> Felicitations </div>"
+} )
