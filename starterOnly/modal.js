@@ -47,6 +47,7 @@ function validateFormular() {
     errElement.setAttribute("data-error-visible", true)
     console.log(errElement)
   })
+<<<<<<< HEAD
 
   last_name.addEventListener("blur", (event) => {
     const errElement = last_name.closest(".formData")
@@ -54,6 +55,8 @@ function validateFormular() {
     errElement.setAttribute("data-error-visible", true)
     console.log(errElement)
   } )
+=======
+>>>>>>> 330a37beb90aae88fe782fde95f1750336afa41d
 }
 validateFormular()
 
@@ -70,5 +73,9 @@ validateFormular()
 form.addEventListener("submit", (event)=> {
   event.preventDefault();
   const body = modalWindow.querySelector(".modal-body")
+<<<<<<< HEAD
   body.innerHTML = "<div> Merci pour votre inscription </div>"
+=======
+  body.innerHTML = "<div> Felicitations </div>"
+>>>>>>> 330a37beb90aae88fe782fde95f1750336afa41d
 } )
