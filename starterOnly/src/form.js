@@ -1,4 +1,5 @@
 function validateError (element, errorMessage) {
+    const collection = []
     const errElement = ((collection instanceof NodeList) ? element[0] : element).closest(".formData")
     if (errorMessage) {
         errElement.setAttribute("data-error", errorMessage)
@@ -47,6 +48,29 @@ function validateEmailChars (element) {
     validateError(element, null)
     return false
 }
+
+function isBirthdateValid(element) {
+    let userBirthdate = element.value
+    console.log(userBirthdate)
+    if (userBirthdate == '') {
+        validateError(element, "Champ obligatoire")
+        return true
+    }
+    else {
+        let date = new Date()
+        let year = date.getFullYear()
+        let month = ('0' + (date.getMonth() + 1)).slice(-2)
+        let day = ('0' + date.getDate()).slice(-2)
+        let formattedDate = `${year}-${month}-${day}`
+        if (userBirthdate > formattedDate) {
+            validateError(element, "Vous ne pouvez pas être né dans le futur !")
+            return true
+        }
+        else validateError(element, "")
+        return false
+    }
+}
+
  
 function validateIntegerOnly(element) {
     if (element.value.split('').find(c => !'0123456789'.includes(c))) {
@@ -89,11 +113,15 @@ export const initFormValidation = () => {
         {
             element: number_tournament,
             validators: [ validateInputEmpty, validateIntegerOnly ]
+        },
+        {
+            element: birthdate,
+            validators: [ isBirthdateValid ]
         }
     ]
 
     const collection = document.querySelectorAll("radio")
-    console.log(collection instanceof NodeList)
+    //console.log(collection instanceof NodeList)
 
     // call each validator on blur
     validators.forEach(validator => {
