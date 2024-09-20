@@ -18,8 +18,8 @@ export const initModal = () => {
   // launch modal event
   modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
   closeBtn.addEventListener("click",closeModal);
-  modalBg.addEventListener("click", closeModal);
-  modalWindow.addEventListener("click", stopPropagation)
+  modalBg.addEventListener("mousedown", closeModal);
+  modalWindow.addEventListener("mousedown", stopPropagation)
 
   // launch modal form
   function launchModal() {

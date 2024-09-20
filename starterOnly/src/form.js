@@ -1,6 +1,5 @@
 function validateError (element, errorMessage) {
-    const collection = []
-    const errElement = ((collection instanceof NodeList) ? element[0] : element).closest(".formData")
+    const errElement = ((element instanceof NodeList) ? element[0] : element).closest(".formData")
     if (errorMessage) {
         errElement.setAttribute("data-error", errorMessage)
         errElement.setAttribute("data-error-visible", true)
@@ -28,9 +27,9 @@ function validateInputLength (element) {
     return false
 }
 
-const validChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -"
+const regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-\s][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/
 function validateInputValidNameChars (element) {
-    if (element.value.split('').find(c => !validChars.includes(c))) {
+    if (!regexName.test(element.value)) {
         validateError(element, "Contient des caractères invalides")
         return true
     }
@@ -40,7 +39,6 @@ function validateInputValidNameChars (element) {
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/ // J'utilise une regex qui me permet de vérifier si une addresse mail est valide ou non
 function validateEmailChars (element) {
-    console.log(element.value, regex.test(element.value))
     if (!regex.test(element.value)) {
         validateError(element, "Email invalide")
         return true
@@ -49,26 +47,57 @@ function validateEmailChars (element) {
     return false
 }
 
-function isBirthdateValid(element) {
+
+function isBirthdateNotFuture(element) {
     let userBirthdate = element.value
-    console.log(userBirthdate)
-    if (userBirthdate == '') {
-        validateError(element, "Champ obligatoire")
+    let date = new Date()
+    let year = date.getFullYear()
+    let month = ('0' + (date.getMonth() + 1)).slice(-2)
+    let day = ('0' + date.getDate()).slice(-2)
+    let formattedDate = `${year}-${month}-${day}`
+    if (userBirthdate > formattedDate) {
+        validateError(element, "Vous ne pouvez pas être né dans le futur !")
         return true
     }
-    else {
-        let date = new Date()
-        let year = date.getFullYear()
-        let month = ('0' + (date.getMonth() + 1)).slice(-2)
-        let day = ('0' + date.getDate()).slice(-2)
-        let formattedDate = `${year}-${month}-${day}`
-        if (userBirthdate > formattedDate) {
-            validateError(element, "Vous ne pouvez pas être né dans le futur !")
-            return true
-        }
-        else validateError(element, "")
-        return false
+    validateError(element, null)
+    return false
+}
+
+function isDateMajor(element) {
+    const userBirthdate = new Date(element.value)
+    const date = new Date()
+    let age = date.getFullYear() - userBirthdate.getFullYear()
+    const month = date.getMonth() - userBirthdate.getMonth()
+    if (month < 0 || (month === 0 && date.getDate() < userBirthdate.getDate())) {
+        age-- 
     }
+    if (age <18) {
+        validateError(element,"Vous devez être majeur(e) pour participer")
+        return true
+    }
+    validateError(element, null)
+    return false
+    
+
+
+}
+
+function validatePlace(element) {
+    if(![...element].find(el => el.checked)) {
+        validateError(element, "vous devez sélectionner une ville")
+        return true
+    }
+    else validateError(element,null)
+    return false
+}
+
+function validateCgu(element) {
+    if(!element.checked) {
+        validateError(element, "vous devez valider les CGU")
+        return true
+    }
+    else validateError(element,null)
+    return false
 }
 
  
@@ -96,8 +125,14 @@ export const initFormValidation = () => {
     const email = form.querySelector("#email")
     const birthdate = form.querySelector("#birthdate")
     const number_tournament = form.querySelector("#quantity")
+    const places = form.querySelectorAll(".cities .checkbox-input")
+    const checkboxCgu = form.querySelector("#checkbox1")
 
     const validators = [
+        {
+            element: checkboxCgu,
+            validators: [validateCgu]
+        },
         {
             element: first_name,
             validators: [ validateInputEmpty, validateInputLength, validateInputValidNameChars ]
@@ -116,23 +151,26 @@ export const initFormValidation = () => {
         },
         {
             element: birthdate,
-            validators: [ isBirthdateValid ]
+            validators: [ validateInputEmpty, isBirthdateNotFuture, isDateMajor ]
+        },
+        {
+            element: places,
+            validators: [ validatePlace ]
         }
     ]
 
-    const collection = document.querySelectorAll("radio")
-    //console.log(collection instanceof NodeList)
-
     // call each validator on blur
     validators.forEach(validator => {
-        validator.element.addEventListener("blur", ()=>{
+        const element = validator.element
+        const elements = element instanceof NodeList ? [...element] : [element]
+        elements.forEach(element => element.addEventListener("blur", ()=>{
             validateField(validator)
-        })
+        }))
     })
 
     form.addEventListener("submit", (event)=> {
         event.preventDefault();
-        if(!validators.find(validator => validateField(validator))) {
+        if(validators.filter(validator => validateField(validator)).length === 0) {
             const body = modalWindow.querySelector(".modal-body")
             body.innerHTML = "<div> Merci pour votre inscription </div>"
         }
