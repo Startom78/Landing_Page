@@ -1,4 +1,4 @@
-function validateError (element, errorMessage) {
+function validateError (element, errorMessage) { // cette fonction affiche un message selon le type d'erreur
     const errElement = ((element instanceof NodeList) ? element[0] : element).closest(".formData")
     if (errorMessage) {
         errElement.setAttribute("data-error", errorMessage)
@@ -9,7 +9,7 @@ function validateError (element, errorMessage) {
     }
 }
 
-function validateInputEmpty (element) {
+function validateInputEmpty (element) { // Cette fonction vérifie si le champ rentré n'est pas vide, sinon il affiche un message d'erreur
     if (element.value.length < 1) {
         validateError(element, "Champ obligatoire")
         return true
@@ -18,7 +18,7 @@ function validateInputEmpty (element) {
     return false
 }
 
-function validateInputLength (element) {
+function validateInputLength (element) { // Cette fonction vérifie si le champ rentré fait au moins 2 caractères, sinon il renvoie un message d'erreur
     if (element.value.length < 2) {
         validateError(element, "Doit contenir au moins 2 caractères")
         return true
@@ -27,7 +27,7 @@ function validateInputLength (element) {
     return false
 }
 
-const regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-\s][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/
+const regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-\s][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/ // Cette regex me permet de vérifier si le format du prénom et du nom est valide
 function validateInputValidNameChars (element) {
     if (!regexName.test(element.value)) {
         validateError(element, "Contient des caractères invalides")
@@ -48,7 +48,7 @@ function validateEmailChars (element) {
 }
 
 
-function isBirthdateNotFuture(element) {
+function isBirthdateNotFuture(element) { // Ici on vérifie si l'utilisateur n'a pas rentré une date dans le futur
     let userBirthdate = element.value
     let date = new Date()
     let year = date.getFullYear()
@@ -63,7 +63,7 @@ function isBirthdateNotFuture(element) {
     return false
 }
 
-function isDateMajor(element) {
+function isDateMajor(element) { // Ici cette fonction me permet de vérifier si l'utilisateur est majeur ou non
     const userBirthdate = new Date(element.value)
     const date = new Date()
     let age = date.getFullYear() - userBirthdate.getFullYear()
@@ -82,7 +82,7 @@ function isDateMajor(element) {
 
 }
 
-function validatePlace(element) {
+function validatePlace(element) { // Celle-ci vérifie si une ville a été coché
     if(![...element].find(el => el.checked)) {
         validateError(element, "vous devez sélectionner une ville")
         return true
@@ -91,7 +91,7 @@ function validatePlace(element) {
     return false
 }
 
-function validateCgu(element) {
+function validateCgu(element) { // Ici je vérifie que les CGU ont bien étés cochés
     if(!element.checked) {
         validateError(element, "vous devez valider les CGU")
         return true
@@ -101,7 +101,7 @@ function validateCgu(element) {
 }
 
  
-function validateIntegerOnly(element) {
+function validateIntegerOnly(element) { // Cette fonction permet de vérifier que le nombre de tournoi auquel l'utilisateur a participé est un entier
     if (element.value.split('').find(c => !'0123456789'.includes(c))) {
         validateError(element, "Entier obligatoire")
         return true
@@ -114,7 +114,7 @@ function validateField (validator) {
     return validator.validators.find(validate => validate(validator.element))
 }
 
-export const initFormValidation = () => {
+export const initFormValidation = () => { 
     // Je récupère ici les éléments de mon formulaire
     const modalBg = document.querySelector(".bground");
     const modalWindow =  modalBg.querySelector(".content");
@@ -128,7 +128,7 @@ export const initFormValidation = () => {
     const places = form.querySelectorAll(".cities .checkbox-input")
     const checkboxCgu = form.querySelector("#checkbox1")
 
-    const validators = [
+    const validators = [ // J'indique l'élémént à prendre en compte pour valider chaque partie du formulaire
         {
             element: checkboxCgu,
             validators: [validateCgu]
@@ -159,7 +159,7 @@ export const initFormValidation = () => {
         }
     ]
 
-    // call each validator on blur
+    // J'appelle chaque validateur en cas de blur
     validators.forEach(validator => {
         const element = validator.element
         const elements = element instanceof NodeList ? [...element] : [element]
@@ -168,7 +168,7 @@ export const initFormValidation = () => {
         }))
     })
 
-    form.addEventListener("submit", (event)=> {
+    form.addEventListener("submit", (event)=> { 
         event.preventDefault();
         if(validators.filter(validator => validateField(validator)).length === 0) {
             const body = modalWindow.querySelector(".modal-body")

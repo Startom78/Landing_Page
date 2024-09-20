@@ -33,12 +33,4 @@ export const initModal = () => {
   function stopPropagation(event) {
     event.stopPropagation();
   }
-
-
-  //TODO tests manuels
-  //TODO Ajouter confirmation quand envoi réussi
-  //TODO Ajouter validation ou message d'erreur
-  //TODO Implémenter entrée du formulaire
-  //Ceci est un test 
-
 }
