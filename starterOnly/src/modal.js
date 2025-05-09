@@ -1,36 +1,38 @@
 export const editNav = () => {
-  var x = document.getElementById("myTopnav");
-  if (x.className === "topnav") {
-    x.className += " responsive";
-  } else {
-    x.className = "topnav";
-  }
-}
+    var x = document.getElementById("myTopnav");
+    if (x.className === "topnav") {
+        x.className += " responsive";
+    } else {
+        x.className = "topnav";
+    }
+};
 
 export const initModal = () => {
-  // DOM Elements
-  const modalBg = document.querySelector(".bground");
-  const closeBtn = modalBg.querySelector(".close");
-  const modalBtn = document.querySelectorAll(".modal-btn");
-  const formData = document.querySelectorAll(".formData");
-  const modalWindow =  modalBg.querySelector(".content");
+    // DOM Elements
+    const modalBg = document.querySelector(".bground");
+    const closeBtn = modalBg.querySelector(".close");
+    const modalBtn = document.querySelectorAll(".modal-btn");
+    const formData = document.querySelectorAll(".formData");
+    const modalWindow = modalBg.querySelector(".content");
 
-  // launch modal event
-  modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
-  closeBtn.addEventListener("click",closeModal);
-  modalBg.addEventListener("mousedown", closeModal);
-  modalWindow.addEventListener("mousedown", stopPropagation)
+    // launch modal event
+    modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
+    closeBtn.addEventListener("click", closeModal);
+    modalBg.addEventListener("mousedown", closeModal);
+    modalWindow.addEventListener("mousedown", stopPropagation);
 
-  // launch modal form
-  function launchModal() {
-    modalBg.style.display = "block";
-  }
+    // launch modal form
+    function launchModal() {
+        modalBg.style.display = "flex";
+        document.body.style.overflow = "hidden";
+    }
 
-  function closeModal() {
-    modalBg.style.display = "none";
-  }
+    function closeModal() {
+        modalBg.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
 
-  function stopPropagation(event) {
-    event.stopPropagation();
-  }
-}
+    function stopPropagation(event) {
+        event.stopPropagation();
+    }
+};

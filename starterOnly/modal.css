@@ -157,34 +157,39 @@ main {
 }
 
 .bground {
+  overflow-y: auto;
   display: none;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   z-index: 1;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  overflow: auto;
+  inset: 0;
   background-color: rgba(26, 39, 156, 0.4);
 }
 
 .content {
-  margin: 5% auto;
-  width: 100%;
-  max-width: 500px;
+  width: 536px;
+  height: 850px;
   animation-name: modalopen;
   animation-duration: var(--modal-duration);
   background: #232323;
   border-radius: 10px;
-  overflow: hidden;
-  position: relative;
+  position: relative; 
   color: #fff;
-  padding-top: 10px;
 }
 
 .modal-body {
   padding: 15px 8%;
   margin: 15px auto;
+  justify-content: flex-end;
+
+  & .closeButton{
+  width: 50%;
+  height: 40px;
+  background-color: #FE142F;
+  color: white;
+  border-radius: 8px;
+  }
 }
 
 label {
@@ -304,6 +309,7 @@ input[data-error]::after {
   opacity: 1;
   cursor: pointer;
   transform: scale(0.7);
+  z-index: 1000;
 }
 .close:before,
 .close:after {
@@ -320,6 +326,30 @@ input[data-error]::after {
 .close:after {
   transform: rotate(-45deg);
 }
+
+.thanks{
+  display: none;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  min-height: 800px;
+  font-size: 36px;
+  font-weight: 400;
+  gap: 1rem;
+  & .message{
+    flex: 1;
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+  & button{
+    justify-self: end;
+  }
+}
+
+
 .btn-submit,
 .btn-signup {
   background: #fe142f;
