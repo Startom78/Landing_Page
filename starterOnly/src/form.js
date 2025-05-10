@@ -14,9 +14,33 @@ function validateError(element, errorMessage) {
 
 function validateInputEmpty(element) {
     // Cette fonction vérifie si le champ rentré n'est pas vide, sinon il affiche un message d'erreur
+    const form = document.querySelector("#form");
+    const first_name = form.querySelector("#first");
+    const last_name = form.querySelector("#last");
+    const email = form.querySelector("#email");
+    const birthdate = form.querySelector("#birthdate");
+    const number_tournament = form.querySelector("#quantity");
+
     if (element.value.length < 1) {
-        validateError(element, "Champ obligatoire");
-        return true;
+        if (element === first_name) {
+            validateError(element, "Le prénom ne peut pas être vide");
+            return true;
+        } else if (element === last_name) {
+            validateError(element, "Le nom ne peut pas être vide");
+            return true;
+        } else if (element === email) {
+            validateError(element, "L'email ne peut pas être vide");
+            return true;
+        } else if (element === birthdate) {
+            validateError(element, "Vous devez rentrer une date de naissance");
+            return true;
+        } else if (element === number_tournament) {
+            validateError(
+                element,
+                "Veuillez indiquer le nombre de tournoi(s) déja réalisé(s)"
+            );
+            return true;
+        }
     }
     validateError(element, null);
     return false;
@@ -24,19 +48,53 @@ function validateInputEmpty(element) {
 
 function validateInputLength(element) {
     // Cette fonction vérifie si le champ rentré fait au moins 2 caractères, sinon il renvoie un message d'erreur
+    const form = document.querySelector("#form");
+    const first_name = form.querySelector("#first");
+    const last_name = form.querySelector("#last");
+    const email = form.querySelector("#email");
+
     if (element.value.length < 2) {
-        validateError(element, "Doit contenir au moins 2 caractères");
-        return true;
+        if (element === first_name) {
+            validateError(
+                element,
+                "Veuillez entrer 2 caractères ou plus pour le champ du prénom"
+            );
+            return true;
+        } else if (element === last_name) {
+            validateError(
+                element,
+                "Veuillez entrer 2 caractères ou plus pour le champ du nom"
+            );
+            return true;
+        } else if (element === email) {
+            validateError(
+                element,
+                "L'addresse mail doit contenir plus de 2 caractères"
+            );
+            return true;
+        }
+        validateError(element, null);
+        return false;
     }
-    validateError(element, null);
-    return false;
 }
 
 const regexName = /^[A-Za-zÀ-ÖØ-öø-ÿ]+(?:[-\s][A-Za-zÀ-ÖØ-öø-ÿ]+)*$/; // Cette regex me permet de vérifier si le format du prénom et du nom est valide
 function validateInputValidNameChars(element) {
+    const form = document.querySelector("#form");
+    const first_name = form.querySelector("#first");
+    const last_name = form.querySelector("#last");
+
     if (!regexName.test(element.value)) {
-        validateError(element, "Contient des caractères invalides");
-        return true;
+        if (element === first_name) {
+            validateError(
+                element,
+                "Le prénom contient des caractères invalides"
+            );
+            return true;
+        } else if (element === last_name) {
+            validateError(element, " Le nom contient des caractères invalides");
+            return true;
+        }
     }
     validateError(element, null);
     return false;
@@ -44,8 +102,18 @@ function validateInputValidNameChars(element) {
 
 const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/; // J'utilise une regex qui me permet de vérifier si une addresse mail est valide ou non
 function validateEmailChars(element) {
+    const allowedCharsRegex = /^[a-zA-Z0-9@._%+-]+$/;
+
+    if (!allowedCharsRegex.test(element.value)) {
+        validateError(element, "Contient un ou plusieurs caractères invalides");
+        return true;
+    }
+
     if (!regex.test(element.value)) {
-        validateError(element, "Email invalide");
+        validateError(
+            element,
+            "Veuillez entrer une adresse mail au format valide (exemple: abc@def.fr)"
+        );
         return true;
     }
     validateError(element, null);
@@ -91,7 +159,7 @@ function isDateMajor(element) {
 function validatePlace(element) {
     // Celle-ci vérifie si une ville a été coché
     if (![...element].find((el) => el.checked)) {
-        validateError(element, "vous devez sélectionner une ville");
+        validateError(element, "Vous devez choisir une option");
         return true;
     } else validateError(element, null);
     return false;
@@ -100,7 +168,10 @@ function validatePlace(element) {
 function validateCgu(element) {
     // Ici je vérifie que les CGU ont bien étés cochés
     if (!element.checked) {
-        validateError(element, "vous devez valider les CGU");
+        validateError(
+            element,
+            "Vous devez vérifier que vous acceptez les termes et conditions"
+        );
         return true;
     } else validateError(element, null);
     return false;
@@ -158,7 +229,11 @@ export const initFormValidation = () => {
         },
         {
             element: email,
-            validators: [validateInputEmpty, validateEmailChars],
+            validators: [
+                validateInputEmpty,
+                validateInputLength,
+                validateEmailChars,
+            ],
         },
         {
             element: number_tournament,
